@@ -1,0 +1,21 @@
+localhost ansible_connection=local
+
+[app]
+app-dev   ansible_ssh_host=165.22.254.25  domain=""
+app-ut   ansible_ssh_host=68.183.177.168  domain=""
+app-sit   ansible_ssh_host=128.199.238.124  domain=""
+app-prod   ansible_ssh_host=167.71.193.84  domain=""
+
+[app:vars]
+ansible_user=sis-deployer
+ansible_ssh_user=sis-deployer
+app_dev_env=dev
+path_dev=/home/um2c/um2c-api
+app_ut_env=qa
+path_ut=/home/um2c/um2c-api
+app_sit_env=staging
+path_sit=/home/um2c/um2c-api
+app_prod_env=prod
+path_prod=/home/um2c/um2c-api
+user=sis-deployer
+#group=www-data

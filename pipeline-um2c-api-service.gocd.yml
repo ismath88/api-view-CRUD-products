@@ -1,0 +1,91 @@
+format_version: 2
+pipelines:
+  um2c_api_dev:
+    group: siskh_um2c_api
+    label_template: "${git[:8]}"
+    lock_behavior: "unlockWhenFinished"
+    secure_variables:
+      GitLab_Access_Token: "AES:v9ICNLLUmdBReP/AEJ+FKg==:6bUhwyI2s9Pd67yoOEkkeyk0/XkzwxNSkd6Z6AWj550="
+      #GitLab_Access_Token: "AES:HUOUcogKFMNTQwS/+a8hTg==:Xrq6uV9R/NepCX7b7Iz4hwOdXIsfkyE2FJNCbFJne84="
+    materials:
+      git:
+        type: configrepo
+        auto_update: true
+        shallow_clone: true
+        branch: "develop"
+    stages:
+      - deploy:
+          clean_workspace: yes
+          tasks:
+            - script: |
+                bash -e scripts/pipeline/deploy.sh
+
+  um2c_api_ut:
+    group: siskh_um2c_api
+    label_template: "${git[:8]}"
+    lock_behavior: "unlockWhenFinished"
+    secure_variables:
+      GitLab_Access_Token: "AES:v9ICNLLUmdBReP/AEJ+FKg==:6bUhwyI2s9Pd67yoOEkkeyk0/XkzwxNSkd6Z6AWj550="
+      #GitLab_Access_Token: "AES:HUOUcogKFMNTQwS/+a8hTg==:Xrq6uV9R/NepCX7b7Iz4hwOdXIsfkyE2FJNCbFJne84="
+    materials:
+      git:
+        type: configrepo
+        auto_update: true
+        shallow_clone: true
+        branch: "develop"
+    stages:
+      - deploy:
+          clean_workspace: yes
+          approval:
+            type: manual
+          tasks:
+            - script: |
+                bash -e scripts/pipeline/deploy.sh
+  um2c_api_sit:
+    group: siskh_um2c_api
+    label_template: "${git[:8]}"
+    lock_behavior: "unlockWhenFinished"
+    secure_variables:
+      GitLab_Access_Token: "AES:v9ICNLLUmdBReP/AEJ+FKg==:6bUhwyI2s9Pd67yoOEkkeyk0/XkzwxNSkd6Z6AWj550="
+      #GitLab_Access_Token: "AES:HUOUcogKFMNTQwS/+a8hTg==:Xrq6uV9R/NepCX7b7Iz4hwOdXIsfkyE2FJNCbFJne84="
+    materials:
+      git:
+        type: configrepo
+        auto_update: true
+        shallow_clone: true
+        branch: "develop"
+    stages:
+      - deploy:
+          approval:
+            type: manual
+            users:
+              - sothorm
+              - devops
+          clean_workspace: yes
+          tasks:
+            - script: |
+                bash -e scripts/pipeline/deploy.sh
+  um2c_api_prod:
+    group: siskh_um2c_api
+    label_template: "${git[:8]}"
+    lock_behavior: "unlockWhenFinished"
+    secure_variables:
+      GitLab_Access_Token: "AES:v9ICNLLUmdBReP/AEJ+FKg==:6bUhwyI2s9Pd67yoOEkkeyk0/XkzwxNSkd6Z6AWj550="
+      #GitLab_Access_Token: "AES:HUOUcogKFMNTQwS/+a8hTg==:Xrq6uV9R/NepCX7b7Iz4hwOdXIsfkyE2FJNCbFJne84="
+    materials:
+      git:
+        type: configrepo
+        auto_update: true
+        shallow_clone: true
+        branch: "develop"
+    stages:
+      - deploy:
+          approval:
+            type: manual
+            users:
+              - sothorm
+              - devops
+          clean_workspace: yes
+          tasks:
+            - script: |
+                bash -e scripts/pipeline/deploy.sh

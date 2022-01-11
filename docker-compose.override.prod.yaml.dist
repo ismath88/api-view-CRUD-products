@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+    app:
+        image: ${CONTAINER_REGISTRY_URL}/app:${VERSION}
+        labels:
+            - traefik.enable=false
+        restart: always
+        volumes:
+            - app-vendor:/srv/api/vendor
+            - ./var/log:/srv/api/var/log
+
+    cache-proxy:
+        labels:
+            - traefik.backend=api.${DOMAIN}
+            - traefik.frontend.rule=Host:api.${DOMAIN}
+            - traefik.docker.network=proxy
+            - traefik.port=80
+        networks:
+            - proxy
+        restart: always
+
+    db:
+        labels:
+            - traefik.enable=false
+        networks:
+            - private
+        restart: always
+
+    nginx-backend:
+        labels:
+            - traefik.enable=false
+        restart: always
+
+networks:
+    private:
+        external: true
+    proxy:
+        external: true
+
+volumes:
+    app-vendor: ~

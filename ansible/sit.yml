@@ -1,0 +1,39 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  vars:
+    commit_hash: "{{ app_revision | default('deployment/sit') }}"
+
+  tasks:
+    - name: Print deployment details
+      debug: msg="Deploying application version {{ commit_hash }} to {{ path_sit }} on stage {{ app_sit_env }}. CI mode {{ lookup('env','CI') }}"
+
+    - name: Change Permission of Pointer CMS project
+      shell: sudo chown -R sis-deployer:root "{{path_sit}}"
+
+    - name: Change Permission of sis-deployer
+      shell: sudo chown -R sis-deployer:sis-deployer .git-credentials
+      args:
+        chdir: "/home/sis-deployer"
+
+    - name: Clone repository
+      git:
+        repo: http://gitlab.com/sis-group/u-centric/um2c-api.git
+        version: "deployment/sit"
+        dest: "{{ path_sit }}"
+        accept_hostkey: yes
+        update: yes
+        force: yes
+      register: cloned
+      become: yes
+      become_user: "{{ user }}"
+    - name: Down service with docker-compose remotely
+      shell: "sudo docker-compose down"
+      args:
+        chdir: "{{ path_sit }}"
+      ignore_errors: yes
+    - name: Start stack with docker-compose remotely
+      shell: "sudo docker-compose up -d"
+      args:
+        chdir: "{{ path_sit }}"

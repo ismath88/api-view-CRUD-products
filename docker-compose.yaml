@@ -1,0 +1,52 @@
+version: '3.4'
+
+services:
+    app:
+        depends_on:
+            - db
+        env_file:
+            - ./.env
+            - ./docker/app/.env
+        image: ${CONTAINER_REGISTRY_URL}/app:stable
+        networks:
+            - internal
+            - private
+        volumes:
+            - ./config/jwt:/srv/api/config/jwt:ro
+
+    db:
+        env_file: ./docker/db/.env
+        image: postgres:9.6-alpine
+        networks:
+            - internal
+        volumes:
+            - ./docker/db/data:/var/lib/postgresql/data:rw
+
+    nginx-backend:
+        depends_on:
+            - app
+        image: quay.io/api-platform/nginx
+        networks:
+            - internal
+            - private
+        volumes:
+            - ./docker/nginx-backend/conf.d:/etc/nginx/conf.d:ro
+            - ./public:/srv/api/public:ro
+
+    cache-proxy:
+        depends_on:
+            - nginx-backend
+        image: ${CONTAINER_REGISTRY_URL}/cache-proxy:stable
+        tmpfs:
+            - /usr/local/var/varnish:exec
+        networks:
+            - internal
+            - private
+        volumes:
+            - ./docker/varnish/conf:/usr/local/etc/varnish:ro
+
+networks:
+    internal:
+        external: false
+    private:
+        external: true

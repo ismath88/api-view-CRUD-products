@@ -1,0 +1,54 @@
+parameters:
+    # Adds a fallback DATABASE_URL if the env var is not set.
+    # This allows you to run cache:warmup even if your
+    # environment variables are not available yet.
+    # You should not need to change this value.
+    env(DATABASE_URL): ""
+
+doctrine:
+    dbal:
+        # configure these for your database server
+        driver: "pdo_pgsql"
+        server_version: "9.6"
+
+        # With Symfony 3.3, remove the `resolve:` prefix
+        url: "%env(resolve:DATABASE_URL)%"
+        types:
+            day_of_week_enum: App\Doctrine\DBAL\Types\DayOfWeekEnumType
+            number_range_object_enum: App\Doctrine\DBAL\Types\NumberRangeObjectEnumType
+            month_enum: App\Doctrine\DBAL\Types\MonthEnumType
+            system_status_enum: App\Doctrine\DBAL\Types\SystemStatusEnumType
+            meter_reading_reason_enum: App\Doctrine\DBAL\Types\MeterReadingReasonEnumType
+            meter_reading_error_enum: App\Doctrine\DBAL\Types\MeterReadingErrorEnumType
+            print_return_letter_enum: App\Doctrine\DBAL\Types\PrintReturnLetterEnumType
+            payment_type_enum: App\Doctrine\DBAL\Types\PaymentTypeEnumType
+            discount_type_enum: App\Doctrine\DBAL\Types\DiscountTypeEnumType
+            activity_type_enum: App\Doctrine\DBAL\Types\ActivityTypeEnumType
+            transfer_status_enum: App\Doctrine\DBAL\Types\TransferStatusEnumType
+            item_type_enum: App\Doctrine\DBAL\Types\ItemTypeEnumType
+            clearing_reason_enum: App\Doctrine\DBAL\Types\ClearingReasonEnumType
+            clearing_status_enum: App\Doctrine\DBAL\Types\ClearingStatusEnumType
+            billing_type: App\Doctrine\DBAL\Types\BillingTypeEnumType
+            deviation_type_enum: App\Doctrine\DBAL\Types\DeviationTypesEnumType
+            job_status_enum: App\Doctrine\DBAL\Types\JobStatusEnumType
+            clearing_type_enum: App\Doctrine\DBAL\Types\ClearingTypeEnumType
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        naming_strategy: wmc.doctrine.orm.naming_strategy
+        auto_mapping: true
+        mappings:
+            App:
+                is_bundle: false
+                type: annotation
+                dir: "%kernel.project_dir%/src/Entity"
+                prefix: 'App\Entity'
+                alias: App
+        dql:
+            numeric_functions:
+                ###> opsway/doctrine-dbal-postgresql ###
+                jsonb_contains: Opsway\Doctrine\ORM\Query\AST\Functions\Contains
+                ###< opsway/doctrine-dbal-postgresql ###
+            string_functions:
+                # oro/doctrine-extensions
+                cast: Oro\ORM\Query\AST\Functions\Cast
+                # oro/doctrine-extensions

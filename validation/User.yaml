@@ -1,0 +1,80 @@
+App\Entity\User:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+              fields:
+                  - username
+    properties:
+        username:
+            - Type:
+                  type: string
+            - Length:
+                  max: 50
+            - Email:
+                  mode: strict
+            - NotNull: ~
+        company:
+            - Type:
+                  type: App\Entity\Company
+        firstname:
+            - Type:
+                  type: string
+            - Length:
+                  max: 30
+            - NotNull: ~
+        lastname:
+            - Type:
+                  type: string
+            - Length:
+                  max: 30
+            - NotNull: ~
+        mobile:
+            - Type:
+                  type: string
+            - Length:
+                  max: 20
+            - NotNull: ~
+        validFrom:
+            - DateTime: ~
+            - NotNull: ~
+        status:
+            - Type:
+                  type: string
+            - Length:
+                  max: 10
+            - NotNull: ~
+        password:
+            - Type:
+                  type: string
+            - NotNull: ~
+        dateActivated:
+            - DateTime: ~
+        dateLastLogon:
+            - DateTime: ~
+        plainPassword:
+            - Type:
+                  type: string
+            - Length:
+                  min: 8
+                  max: 4096
+        mobileUser:
+            - Type:
+                type: bool
+            - NotNull: ~
+        webUser:
+            - Type:
+                type: bool
+            - NotNull: ~
+
+        # BlameableTrait
+        agent:
+            - Type:
+                  type: App\Entity\User
+        creator:
+            - Type:
+                  type: App\Entity\User
+
+        # TimestampableTrait
+        dateCreated:
+            - DateTime: ~
+        dateModified:
+            - DateTime: ~

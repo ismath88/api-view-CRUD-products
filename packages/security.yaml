@@ -1,0 +1,61 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    encoders:
+        App\Entity\User:
+            algorithm: argon2i
+
+    providers:
+        database_users:
+            entity:
+                class: App\Entity\User
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        authentication_token:
+            pattern: "^/authentication_token$"
+            provider: database_users
+            stateless: true
+            json_login:
+                check_path: /authentication_token
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        mobile_login:
+            pattern: "^/mobile/login$"
+            provider: database_users
+            stateless: true
+            json_login:
+                check_path: /mobile/login
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        main:
+            pattern: "^/"
+            provider: database_users
+            stateless: true
+            anonymous: true
+            switch_user:
+                role: ROLE_ALLOWED_TO_SWITCH
+                parameter: X-Switch-User
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+    role_hierarchy:
+        ROLE_ADMIN:
+            - ROLE_USER
+
+    access_control:
+        - { path: ^/authentication_token, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/mobile/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset_password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/schedulers, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - {
+              path: ^/generete_bill_print_bulk_pdf,
+              role: IS_AUTHENTICATED_ANONYMOUSLY,
+          }
+        - { path: ^/billing_scheduler, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, role: IS_AUTHENTICATED_FULLY }

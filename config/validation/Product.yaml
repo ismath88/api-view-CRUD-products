@@ -1,0 +1,47 @@
+App\Entity\Product:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+            fields:
+                - upc
+    properties:        
+        
+        name:
+            - Type:
+                type: string
+            - Length:
+                max: 50
+            - NotNull: ~
+        price:
+            - Type:
+                type: string
+            - Length:
+                max: 30
+        upc:
+            - Type:
+                type: string
+            - Length:                
+                max: 30
+            - NotNull: ~ 
+        status:
+            - Type:
+                type: string
+            - Length:                
+                max: 30
+            - NotNull: ~    
+        prodimg:
+            - Type:
+                type: blob
+
+        # BlameableTrait
+        agent:
+            - Type:
+                type: App\Entity\User
+        creator:
+            - Type:
+                type: App\Entity\User
+
+        # TimestampableTrait
+        dateCreated:
+            - DateTime: ~
+        dateModified:
+            - DateTime: ~

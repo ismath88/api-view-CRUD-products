@@ -1,0 +1,70 @@
+App\Entity\User:
+    attributes:
+        id:
+            groups:
+                # -
+        username:
+            groups:
+                - user_read
+                - user_write
+                - job_header_read
+        company:
+            groups:
+                - user_read
+                - user_write
+        firstname:
+            groups:
+                - user_read
+                - user_write
+        lastname:
+            groups:
+                - user_read
+                - user_write
+        mobile:
+            groups:
+                - user_read
+                - user_write
+        validFrom:
+            groups:
+                - user_read
+                - user_write
+        status:
+            groups:
+                - user_read
+                - user_write
+        password:
+            groups:
+                - user_write
+        dateActivated:
+            groups:
+                - user_read
+        dateLastLogon:
+            groups:
+                - user_read
+        plainPassword:
+            groups:
+                # -
+        mobileUser:
+            groups:
+                - user_read
+                - user_write
+        webUser:
+            groups:
+                - user_read
+                - user_write
+
+        # BlameableTrait
+        agent:
+            groups:
+                - user_read
+        creator:
+            groups:
+                - user_read
+
+        # TimestampableTrait
+        dateCreated:
+            groups:
+                - user_read
+        dateModified:
+            groups:
+                - user_read

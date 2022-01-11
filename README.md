@@ -1,4 +1,11 @@
-# proddccccccy
+Docker used or create container and backend api run on this
+
+API platform use for create API
+
+entity creaate
+serialzation and validation create
+
+# product
 
 
 ## Prerequisites
